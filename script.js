@@ -17,33 +17,43 @@ function  Gameboard() {
 
     const getBoard = () => board;
 
-    const placeToken = (r, c, playerToken) => {
-        if (board[r][c] != EMPTY) {
+    const placeToken = (row, col, playerToken) => {
+        if (board[row][col] != EMPTY) {
             console.log("Invalid Move!");
             return 0;
         }
         else {
-            board[r][c] = playerToken;
+            board[row][col] = playerToken;
         }
         return 1;
     }
     return {printBoard, getBoard, placeToken};
 }
 
+function Player(name, token) {
+
+    const getMove = () => {
+        const SIZE = 3;
+        const cellRow = Math.floor(Math.random() * SIZE);
+        const cellCol = Math.floor(Math.random() * SIZE);
+
+        return {cellRow, cellCol};
+    }
+    return {name, token, getMove};
+}
+
+
 function GameController(playerOneName="PlayerOne",
     playerTwoName="Computer") {
     
-    const SIZE = 3;
-
     const board = Gameboard();
+    let playerOne = Player(playerOneName, "X");
+    let playerTwo = Player(playerTwoName, "O");
 
-    const players = [{name:playerOneName, token: "X"},
-                    {name:playerTwoName, token: "O"}];
-
-    let activePlayer = players[0];
+    let activePlayer = playerOne;
 
     const switchActivePlayer = ()=> {
-        activePlayer = activePlayer.name === players[0].name ? players[1]: players[0];
+        activePlayer = (activePlayer === playerOne) ? playerTwo: playerOne;
     }
 
     const printNewRound = () => {
@@ -51,44 +61,130 @@ function GameController(playerOneName="PlayerOne",
         console.log(`${activePlayer.name}'s turn`)
     }
 
-    const checkWinner = (gameBoard)=> {
-
-        // Check Filled board
-
+    const checkWinner = () => {
+        const BOARD = board.getBoard();
         // Check Rows
-        for (let i = 0; i < SIZE; i++) {
-            row = gameBoard[i];
-            if (row[0] === row[1] && row[1] === row[2]) {
-                if (row[0] === players[0].token) {
-                    console.log("You Win!")
+        for (let i = 0; i < 3; i++) {
+            if (BOARD[i][0] !== "E" && BOARD[i][1] !== "E" && BOARD[i][2] !== "E") {
+                if ((BOARD[i][0] === BOARD[i][1]) &&
+                (BOARD[i][1] === BOARD[i][2])) {
+                   if (BOARD[0][0] == playerOne.token) {
+                       console.log("You Win!")
+                   }
+                   else {
+                       console.log("You lose");
+                   }
+                   printNewRound();
+                   return 1;
                 }
-                else if (row[0] === players[1].token) {
-                    console.log("Computer Wins")
+            }  
+        }
+
+        // Check Columns
+        if (BOARD[0][0] !== "E" && BOARD[1][0] !== "E" && BOARD[2][0] !== "E") {
+            if ((BOARD[0][0] === BOARD[1][0]) &&
+            (BOARD[0][0] === BOARD[2][0])) {
+                if (BOARD[0][0] === playerOne.token) {
+                    console.log("You Win");
                 }
+                else {
+                    console.log("You Lose");
+                }
+                printNewRound();
                 return 1;
             }
         }
-        // Check Columns
+        
+        if (BOARD[0][1] !== "E" && BOARD[1][1] !== "E" && BOARD[2][1] !== "E") {
+            if ((BOARD[0][1] === BOARD[1][1]) &&
+            (BOARD[1][1] === BOARD[2][1])) {
+                if (BOARD[0][1] === playerOne.token) {
+                    console.log("You Win");
+                }
+                else {
+                    console.log("You Lose");
+                }
+                printNewRound();
+                return 1;
+            }
+        }
 
-        return 0;
+        if (BOARD[0][2] !== "E" && BOARD[1][2] !== "E" && BOARD[2][2] !== "E") {
+            if ((BOARD[0][2] === BOARD[1][2]) &&
+            (BOARD[1][2] === BOARD[2][2])) {
+                if (BOARD[0][2] === playerOne.token) {
+                    console.log("You Win");
+                }
+                else {
+                    console.log("You Lose");
+                }
+                printNewRound();
+                return 1;
+            }
+        }
+
         // Check Diagonals
+        if (BOARD[0][0] !== "E" && BOARD[1][1] !== "E" && BOARD[2][2] !== "E") {
+            if ((BOARD[0][0] === BOARD[1][1]) &&
+            (BOARD[1][1] === BOARD[2][2])) {
+                if (BOARD[0][0] === playerOne.token) {
+                    console.log("You Win");
+                }
+                else {
+                    console.log("You Lose");
+                }
+                printNewRound();
+                return 1;
+            }
+        }
+        if (BOARD[0][2] !== "E" && BOARD[1][1] !== "E" && BOARD[2][0] !== "E") {
+            if ((BOARD[0][2] === BOARD[1][1]) &&
+            (BOARD[1][1] === BOARD[2][2])) {
+                if (BOARD[0][2] === playerOne.token) {
+                    console.log("You Win");
+                }
+                else {
+                    console.log("You Lose");
+                }
+                printNewRound();
+                return 1;
+            }
+        }
+        // Check Tie
+        let filledArray = BOARD.filter((row) => {
+            return row.some(cellVal => cellVal === "E");
+        })
+        if (filledArray.length === 0) {
+            printNewRound();
+            console.log("Tie");
+            return 0;
+        }
+
+        return -1;
     }
 
     const playRound = (row, column) => {
-        let switchPlayer;
-        if (activePlayer === players[0]) {
-            switchPlayer = board.placeToken(row, column, activePlayer.token)
+        let switchPlayer, foundWinner;
+        if (activePlayer === playerOne) {
+            switchPlayer = board.placeToken(row, column, activePlayer.token);
         }
         else {
-
-            let randRow = Math.floor(Math.random() * 3);
-            let randCol = Math.floor(Math.random() * 3);
-            switchPlayer = board.placeToken(randRow, randCol, activePlayer.token)
+            let cell = playerTwo.getMove();
+            switchPlayer = board.placeToken(cell.cellRow, cell.cellCol, activePlayer.token);
         }
-        if (switchPlayer) {
+
+        foundWinner = checkWinner();
+
+        if (foundWinner === 0 || foundWinner === 1) {
+            console.log("Game Over");
+            return;
+        }
+
+        if (switchPlayer === 1) {
             switchActivePlayer();
         }
         printNewRound();
+
     }
     printNewRound();
 
