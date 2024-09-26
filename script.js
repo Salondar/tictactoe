@@ -74,7 +74,7 @@ function GameController(playerOneName="PlayerOne",
                    else {
                        console.log("You lose");
                    }
-                   printNewRound();
+                   board.printBoard();
                    return 1;
                 }
             }  
@@ -90,7 +90,7 @@ function GameController(playerOneName="PlayerOne",
                 else {
                     console.log("You Lose");
                 }
-                printNewRound();
+                board.printBoard();
                 return 1;
             }
         }
@@ -104,7 +104,7 @@ function GameController(playerOneName="PlayerOne",
                 else {
                     console.log("You Lose");
                 }
-                printNewRound();
+                board.printBoard();
                 return 1;
             }
         }
@@ -118,7 +118,7 @@ function GameController(playerOneName="PlayerOne",
                 else {
                     console.log("You Lose");
                 }
-                printNewRound();
+                board.printBoard();
                 return 1;
             }
         }
@@ -133,7 +133,7 @@ function GameController(playerOneName="PlayerOne",
                 else {
                     console.log("You Lose");
                 }
-                printNewRound();
+                board.printBoard();
                 return 1;
             }
         }
@@ -146,7 +146,7 @@ function GameController(playerOneName="PlayerOne",
                 else {
                     console.log("You Lose");
                 }
-                printNewRound();
+                board.printBoard();
                 return 1;
             }
         }
@@ -155,7 +155,7 @@ function GameController(playerOneName="PlayerOne",
             return row.some(cellVal => cellVal === "E");
         })
         if (filledArray.length === 0) {
-            printNewRound();
+            board.printBoard();
             console.log("Tie");
             return 0;
         }
