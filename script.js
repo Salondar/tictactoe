@@ -19,27 +19,18 @@ function  Gameboard() {
 
     const placeToken = (row, col, playerToken) => {
         if (board[row][col] != EMPTY) {
-            console.log("Invalid Move!");
-            return 0;
+            return false;
         }
         else {
             board[row][col] = playerToken;
+            return true;
         }
-        return 1;
     }
     return {printBoard, getBoard, placeToken};
 }
 
 function Player(name, token) {
-
-    const getMove = () => {
-        const SIZE = 3;
-        const cellRow = Math.floor(Math.random() * SIZE);
-        const cellCol = Math.floor(Math.random() * SIZE);
-
-        return {cellRow, cellCol};
-    }
-    return {name, token, getMove};
+    return {name, token};
 }
 
 
@@ -50,15 +41,9 @@ function GameController(playerOneName="PlayerOne",
     let playerOne = Player(playerOneName, "X");
     let playerTwo = Player(playerTwoName, "O");
 
-    let activePlayer = playerOne;
-
-    const switchActivePlayer = ()=> {
-        activePlayer = (activePlayer === playerOne) ? playerTwo: playerOne;
-    }
-
-    const printNewRound = () => {
+    const printNewRound = (player) => {
         board.printBoard();
-        console.log(`${activePlayer.name}'s turn`)
+        console.log(`${player.name}'s turn`)
     }
 
     const checkWinner = () => {
@@ -68,13 +53,12 @@ function GameController(playerOneName="PlayerOne",
             if (BOARD[i][0] !== "E" && BOARD[i][1] !== "E" && BOARD[i][2] !== "E") {
                 if ((BOARD[i][0] === BOARD[i][1]) &&
                 (BOARD[i][1] === BOARD[i][2])) {
-                   if (BOARD[0][0] == playerOne.token) {
+                   if (BOARD[i][0] == playerOne.token) {
                        console.log("You Win!")
                    }
                    else {
                        console.log("You lose");
                    }
-                   board.printBoard();
                    return 1;
                 }
             }  
@@ -90,7 +74,6 @@ function GameController(playerOneName="PlayerOne",
                 else {
                     console.log("You Lose");
                 }
-                board.printBoard();
                 return 1;
             }
         }
@@ -104,7 +87,6 @@ function GameController(playerOneName="PlayerOne",
                 else {
                     console.log("You Lose");
                 }
-                board.printBoard();
                 return 1;
             }
         }
@@ -118,7 +100,6 @@ function GameController(playerOneName="PlayerOne",
                 else {
                     console.log("You Lose");
                 }
-                board.printBoard();
                 return 1;
             }
         }
@@ -133,7 +114,6 @@ function GameController(playerOneName="PlayerOne",
                 else {
                     console.log("You Lose");
                 }
-                board.printBoard();
                 return 1;
             }
         }
@@ -146,7 +126,6 @@ function GameController(playerOneName="PlayerOne",
                 else {
                     console.log("You Lose");
                 }
-                board.printBoard();
                 return 1;
             }
         }
@@ -155,7 +134,6 @@ function GameController(playerOneName="PlayerOne",
             return row.some(cellVal => cellVal === "E");
         })
         if (filledArray.length === 0) {
-            board.printBoard();
             console.log("Tie");
             return 0;
         }
@@ -163,30 +141,41 @@ function GameController(playerOneName="PlayerOne",
         return -1;
     }
 
-    const playRound = (row, column) => {
-        let switchPlayer, foundWinner;
-        if (activePlayer === playerOne) {
-            switchPlayer = board.placeToken(row, column, activePlayer.token);
+    const isGameOver = ()=> {
+        if (checkWinner() === 0 || checkWinner() === 1) {
+            board.printBoard();
+            console.log("Game Over");
+            return true;
         }
         else {
-            let cell = playerTwo.getMove();
-            switchPlayer = board.placeToken(cell.cellRow, cell.cellCol, activePlayer.token);
+            return false;
         }
-
-        foundWinner = checkWinner();
-
-        if (foundWinner === 0 || foundWinner === 1) {
-            console.log("Game Over");
-            return;
-        }
-
-        if (switchPlayer === 1) {
-            switchActivePlayer();
-        }
-        printNewRound();
-
     }
-    printNewRound();
+    const playRound = (row, column) => {
+        let tokenPlaced = board.placeToken(row, column, playerOne.token);
+
+        if (tokenPlaced === true) {
+            if (isGameOver()) {
+                return;
+            }
+            
+            printNewRound(playerTwo);
+            do {
+                let cellRow = Math.floor(Math.random() * 3);
+                let cellCol =  Math.floor(Math.random() * 3);
+                tokenPlaced = board.placeToken(cellRow, cellCol, playerTwo.token);
+            } while(tokenPlaced === false);
+
+            if (isGameOver()) {
+                return;
+            }
+            printNewRound(playerOne);
+        }
+        else {
+            console.log("Invalid move. Try Again!");
+        }
+    }
+    printNewRound(playerOne);
 
     return {playRound};
 }
