@@ -155,10 +155,10 @@ function GameController(playerOneName="PlayerOne",
         let tokenPlaced = board.placeToken(row, column, playerOne.token);
 
         if (tokenPlaced === true) {
-            if (isGameOver()) {
+            if (isGameOver() === true) {
                 return;
             }
-            
+
             printNewRound(playerTwo);
             do {
                 let cellRow = Math.floor(Math.random() * 3);
@@ -166,7 +166,7 @@ function GameController(playerOneName="PlayerOne",
                 tokenPlaced = board.placeToken(cellRow, cellCol, playerTwo.token);
             } while(tokenPlaced === false);
 
-            if (isGameOver()) {
+            if (isGameOver() === true) {
                 return;
             }
             printNewRound(playerOne);
