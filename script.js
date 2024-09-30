@@ -47,22 +47,23 @@ function GameController(playerOneName="PlayerOne",
     }
 
     const checkWinner = () => {
-        const BOARD = board.getBoard();
+        let BOARD = board.getBoard();
         // Check Rows
-        for (let i = 0; i < 3; i++) {
-            if (BOARD[i][0] !== "E" && BOARD[i][1] !== "E" && BOARD[i][2] !== "E") {
-                if ((BOARD[i][0] === BOARD[i][1]) &&
-                (BOARD[i][1] === BOARD[i][2])) {
-                   if (BOARD[i][0] == playerOne.token) {
-                       console.log("You Win!")
-                   }
-                   else {
-                       console.log("You lose");
-                   }
-                   return 1;
-                }
-            }  
+        let nonEmptyRows = BOARD.filter((row) => row.every(value => value !== "E"));
+        for (let i = 0; i < nonEmptyRows.length; i++) {
+            let winnerX = nonEmptyRows[i].filter(value => value === "X");
+            let winnerO = nonEmptyRows[i].filter(value => value === "O");
+            if (winnerX.length === 3) {
+                console.log("You Win!");
+                return 1;
+            }
+            else if (winnerO.length === 3) {
+                console.log("You lose!");
+                return 1;
+            }
         }
+
+       
 
         // Check Columns
         if (BOARD[0][0] !== "E" && BOARD[1][0] !== "E" && BOARD[2][0] !== "E") {
@@ -142,7 +143,8 @@ function GameController(playerOneName="PlayerOne",
     }
 
     const isGameOver = ()=> {
-        if (checkWinner() === 0 || checkWinner() === 1) {
+        const result = checkWinner();
+        if (result === 0 || result === 1) {
             board.printBoard();
             console.log("Game Over");
             return true;
