@@ -50,9 +50,9 @@ function GameController(playerOneName="PlayerOne",
         let BOARD = board.getBoard();
         // Check Rows
         let nonEmptyRows = BOARD.filter((row) => row.every(value => value !== "E"));
-        for (let i = 0; i < nonEmptyRows.length; i++) {
-            let winnerX = nonEmptyRows[i].filter(value => value === "X");
-            let winnerO = nonEmptyRows[i].filter(value => value === "O");
+        for (row of nonEmptyRows) {
+            let winnerX = row.filter(value => value === "X");
+            let winnerO = row.filter(value => value === "O");
             if (winnerX.length === 3) {
                 console.log("You Win!");
                 return 1;
@@ -62,8 +62,6 @@ function GameController(playerOneName="PlayerOne",
                 return 1;
             }
         }
-
-       
 
         // Check Columns
         if (BOARD[0][0] !== "E" && BOARD[1][0] !== "E" && BOARD[2][0] !== "E") {
