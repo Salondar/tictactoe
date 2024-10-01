@@ -63,46 +63,24 @@ function GameController(playerOneName="PlayerOne",
             }
         }
 
-        // Check Columns
-        if (BOARD[0][0] !== "E" && BOARD[1][0] !== "E" && BOARD[2][0] !== "E") {
-            if ((BOARD[0][0] === BOARD[1][0]) &&
-            (BOARD[0][0] === BOARD[2][0])) {
-                if (BOARD[0][0] === playerOne.token) {
-                    console.log("You Win");
-                }
-                else {
-                    console.log("You Lose");
-                }
+        for (let i = 0; i < 3; i++) {
+            let temp = [];
+            for (let j = 0; j < 3; j++) {
+                temp.push(BOARD[j][i]);
+            }
+            let winnerX = temp.filter(value => value === "X");
+            let winnerO = temp.filter(value => value === "O");
+
+            if (winnerX.length === 3) {
+                console.log("You Win");
+                return 1;
+            }
+            else if (winnerO.length === 3) {
+                console.log("You lose");
                 return 1;
             }
         }
         
-        if (BOARD[0][1] !== "E" && BOARD[1][1] !== "E" && BOARD[2][1] !== "E") {
-            if ((BOARD[0][1] === BOARD[1][1]) &&
-            (BOARD[1][1] === BOARD[2][1])) {
-                if (BOARD[0][1] === playerOne.token) {
-                    console.log("You Win");
-                }
-                else {
-                    console.log("You Lose");
-                }
-                return 1;
-            }
-        }
-
-        if (BOARD[0][2] !== "E" && BOARD[1][2] !== "E" && BOARD[2][2] !== "E") {
-            if ((BOARD[0][2] === BOARD[1][2]) &&
-            (BOARD[1][2] === BOARD[2][2])) {
-                if (BOARD[0][2] === playerOne.token) {
-                    console.log("You Win");
-                }
-                else {
-                    console.log("You Lose");
-                }
-                return 1;
-            }
-        }
-
         // Check Diagonals
         if (BOARD[0][0] !== "E" && BOARD[1][1] !== "E" && BOARD[2][2] !== "E") {
             if ((BOARD[0][0] === BOARD[1][1]) &&
