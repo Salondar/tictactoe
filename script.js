@@ -49,10 +49,9 @@ function GameController(playerOneName="PlayerOne",
     const checkWinner = () => {
         let BOARD = board.getBoard();
         // Check Rows
-        let nonEmptyRows = BOARD.filter((row) => row.every(value => value !== "E"));
-        for (row of nonEmptyRows) {
-            let winnerX = row.filter(value => value === "X");
-            let winnerO = row.filter(value => value === "O");
+        for (row of BOARD) {
+            let winnerX = BOARD.filter(value => value === "X");
+            let winnerO = BOARD.filter(value => value === "O");
             if (winnerX.length === 3) {
                 console.log("You Win!");
                 return 1;
@@ -63,6 +62,7 @@ function GameController(playerOneName="PlayerOne",
             }
         }
 
+        // Check Columns
         for (let i = 0; i < 3; i++) {
             let temp = [];
             for (let j = 0; j < 3; j++) {
@@ -80,9 +80,35 @@ function GameController(playerOneName="PlayerOne",
                 return 1;
             }
         }
-        
+
+        // Check Diagonal
+        let diagonalRows = [[], []];
+        for (let i = 0; i < 3; i++) {
+            for (let j = 0; j < 3; j++) {
+                if (i === j) {
+                    diagonalRows[0].push(BOARD[i][j]);
+                }
+                if ((i + j) === 2) {
+                    diagonalRows[1].push(BOARD[i][j]);
+                }
+            }
+        }
+
+        for (row of diagonalRows ) {
+            let winnerX = row.filter(value => value === "X");
+            let winnerO = row.filter(value => value === "O");
+
+            if (winnerX.length === 3) {
+                console.log("You Win!");
+                return 1;
+            }
+            else if (winnerO.length === 3) {
+                console.log("You Lose!");
+                return 1
+            }
+        }
         // Check Diagonals
-        if (BOARD[0][0] !== "E" && BOARD[1][1] !== "E" && BOARD[2][2] !== "E") {
+        /*if (BOARD[0][0] !== "E" && BOARD[1][1] !== "E" && BOARD[2][2] !== "E") {
             if ((BOARD[0][0] === BOARD[1][1]) &&
             (BOARD[1][1] === BOARD[2][2])) {
                 if (BOARD[0][0] === playerOne.token) {
@@ -105,7 +131,7 @@ function GameController(playerOneName="PlayerOne",
                 }
                 return 1;
             }
-        }
+        } */
         // Check Tie
         let filledArray = BOARD.filter((row) => {
             return row.some(cellVal => cellVal === "E");
