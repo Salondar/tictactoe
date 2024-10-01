@@ -107,32 +107,8 @@ function GameController(playerOneName="PlayerOne",
                 return 1
             }
         }
-        // Check Diagonals
-        /*if (BOARD[0][0] !== "E" && BOARD[1][1] !== "E" && BOARD[2][2] !== "E") {
-            if ((BOARD[0][0] === BOARD[1][1]) &&
-            (BOARD[1][1] === BOARD[2][2])) {
-                if (BOARD[0][0] === playerOne.token) {
-                    console.log("You Win");
-                }
-                else {
-                    console.log("You Lose");
-                }
-                return 1;
-            }
-        }
-        if (BOARD[0][2] !== "E" && BOARD[1][1] !== "E" && BOARD[2][0] !== "E") {
-            if ((BOARD[0][2] === BOARD[1][1]) &&
-            (BOARD[1][1] === BOARD[2][2])) {
-                if (BOARD[0][2] === playerOne.token) {
-                    console.log("You Win");
-                }
-                else {
-                    console.log("You Lose");
-                }
-                return 1;
-            }
-        } */
-        // Check Tie
+
+        // Check Tie. Find partially empty rows. If there are none and we got to this point then it is tie
         let filledArray = BOARD.filter((row) => {
             return row.some(cellVal => cellVal === "E");
         })
