@@ -1,7 +1,7 @@
 function  Gameboard() {
     const ROWS = 3;
     const COLS = 3;
-    const EMPTY = "E";
+    const EMPTY = "";
 
     const board = [];
     for (let i = 0; i < ROWS; i++ ) {
@@ -10,11 +10,6 @@ function  Gameboard() {
             board[i].push(EMPTY);
         }
     }
-
-    const printBoard = ()=> {
-        console.log(board);
-    }
-
     const getBoard = () => board;
 
     const placeToken = (row, col, playerToken) => {
@@ -26,13 +21,12 @@ function  Gameboard() {
             return true;
         }
     }
-    return {printBoard, getBoard, placeToken};
+    return {getBoard, placeToken};
 }
 
 function Player(name, token) {
     return {name, token};
 }
-
 
 function GameController(playerOneName="PlayerOne",
     playerTwoName="Computer") {
@@ -41,24 +35,17 @@ function GameController(playerOneName="PlayerOne",
     let playerOne = Player(playerOneName, "X");
     let playerTwo = Player(playerTwoName, "O");
 
-    const printNewRound = (player) => {
-        board.printBoard();
-        console.log(`${player.name}'s turn`)
-    }
-
     const checkWinner = () => {
         let BOARD = board.getBoard();
         // Check Rows
         for (row of BOARD) {
-            let winnerX = BOARD.filter(value => value === "X");
-            let winnerO = BOARD.filter(value => value === "O");
+            let winnerX = row.filter(value => value === "X");
+            let winnerO = row.filter(value => value === "O");
             if (winnerX.length === 3) {
-                console.log("You Win!");
                 return 1;
             }
             else if (winnerO.length === 3) {
-                console.log("You lose!");
-                return 1;
+                return 2;
             }
         }
 
@@ -72,12 +59,10 @@ function GameController(playerOneName="PlayerOne",
             let winnerO = temp.filter(value => value === "O");
 
             if (winnerX.length === 3) {
-                console.log("You Win");
                 return 1;
             }
             else if (winnerO.length === 3) {
-                console.log("You lose");
-                return 1;
+                return 2;
             }
         }
 
@@ -99,63 +84,102 @@ function GameController(playerOneName="PlayerOne",
             let winnerO = row.filter(value => value === "O");
 
             if (winnerX.length === 3) {
-                console.log("You Win!");
                 return 1;
             }
             else if (winnerO.length === 3) {
-                console.log("You Lose!");
-                return 1
+                return 2
             }
         }
 
         // Check Tie. Find partially empty rows. If there are none and we got to this point then it is tie
         let filledArray = BOARD.filter((row) => {
-            return row.some(cellVal => cellVal === "E");
+            return row.some(cellVal => cellVal === "");
         })
         if (filledArray.length === 0) {
-            console.log("Tie");
             return 0;
         }
 
         return -1;
     }
 
-    const isGameOver = ()=> {
-        const result = checkWinner();
-        if (result === 0 || result === 1) {
-            board.printBoard();
-            console.log("Game Over");
-            return true;
-        }
-        else {
-            return false;
-        }
-    }
     const playRound = (row, column) => {
         let tokenPlaced = board.placeToken(row, column, playerOne.token);
+        let isGameOver;
 
         if (tokenPlaced === true) {
-            if (isGameOver() === true) {
-                return;
+            isGameOver = checkWinner();
+            
+            if (isGameOver === 0 || isGameOver === 1 || isGameOver === 2) {
+                return isGameOver;
             }
 
-            printNewRound(playerTwo);
             do {
                 let cellRow = Math.floor(Math.random() * 3);
                 let cellCol =  Math.floor(Math.random() * 3);
                 tokenPlaced = board.placeToken(cellRow, cellCol, playerTwo.token);
             } while(tokenPlaced === false);
 
-            if (isGameOver() === true) {
-                return;
+            if (isGameOver === 0 || isGameOver === 1 || isGameOver === 2) {
+                return isGameOver;
+            } else {
+                return -1;
             }
-            printNewRound(playerOne);
         }
-        else {
-            console.log("Invalid move. Try Again!");
-        }
+        return -1;
     }
-    printNewRound(playerOne);
 
-    return {playRound};
+    return {
+        playRound,
+        getBoard: board.getBoard()
+
+    };
 }
+
+function ScreenController() {
+    const game = GameController();
+    const boardDiv = document.querySelector(".board");
+    const endMsg = document.querySelector(".msg");
+    const board = game.getBoard;
+
+    const updateScreen = () => {
+        boardDiv.textContent = "";
+        console.log(board);
+        board.forEach((row, rowIndex) => {
+            row.forEach((value, columnIndex) => {
+                const cellButton = document.createElement("button");
+                cellButton.classList.add("cell");
+
+                cellButton.dataset.row = rowIndex;
+                cellButton.dataset.column = columnIndex;
+                
+                cellButton.textContent = value;
+                boardDiv.appendChild(cellButton);
+            })
+        });
+    }
+
+    boardDiv.addEventListener("click", (event) => {
+        const selectedRow = parseInt(event.target.dataset.row, 10);
+        const selectedColumn = parseInt(event.target.dataset.column, 10);
+
+
+        //if (!selectedRow && !selectedRow) return;
+        const isGameOver = game.playRound(selectedRow, selectedColumn);
+        updateScreen();
+        if (isGameOver === 1) {
+            endMsg.textContent = "You Win!";
+            return;
+        }
+        else if (isGameOver === 2) {
+            endMsg.textContent = "You Lose!";
+            return;
+        }
+        else if (isGameOver === 0) {
+            endMsg.textContent = "Tie!";
+            return;
+        }
+    });
+    updateScreen();
+}
+
+ScreenController();
