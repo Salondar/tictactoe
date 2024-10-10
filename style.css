@@ -24,14 +24,15 @@ h1 {
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(3, 1fr);
     gap: 0.01em;
-    background-color: black;
+    background-color:  #3e6a56;
 }
   
 .cell {
-    font-size: 2.5em;
+    font-size: 2.8em;
     font-weight: bolder;
-    background-color: #E0E0E0;
+    background-color: #D3D3D3;
     color: black;
+    border-radius: 8px;
 }
 
 .buttonContainer {
@@ -46,9 +47,15 @@ h1 {
     height: 3.5em;
     border-radius: 12px;
     color: white;
-    background-color: black;
+    background-color: #E97451;
     font-weight: bold;
     font-size: 1em;
+    border: none;
+}
+
+.newGame:hover,
+.newGame:active {
+  background-color:#D25A38; /*#51E997; */
 }
 
 .gameOverMsg {
