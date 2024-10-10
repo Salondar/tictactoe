@@ -40,12 +40,13 @@ h1 {
 
 
 .newGame {
-    width: 10em;
-    height: 3em;
+    width: 13em;
+    height: 3.5em;
     border-radius: 12px;
     color: white;
     background-color: black;
     font-weight: bold;
+    font-size: 1em;
 }
 
 .gameOverMsg {
