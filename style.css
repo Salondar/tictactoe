@@ -4,7 +4,7 @@ body {
   font-size: 16px;
   background-color: #3e6a56;
   font-family: "Lato", serif;
-  font-weight: 300;
+  font-weight: 400;
   width : 30vw;
   height: 600px;
   margin: 0 auto;
@@ -23,7 +23,7 @@ h1 {
     height: 70%;
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(3, 1fr);
-    gap: 0.01em;
+    gap: 0.1em;
     background-color:  #3e6a56;
 }
   
