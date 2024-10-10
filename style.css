@@ -5,7 +5,9 @@ body {
   background-color: #3e6a56;
   font-family: "Lato", serif;
   font-weight: 300;
-
+  width : 30vw;
+  height: 600px;
+  margin: 0 auto;
 }
 
 h1 {
@@ -14,14 +16,6 @@ h1 {
   color: white;
 }
 
-.container{
-  width : 30vw;
-  height: 600px;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-}
 
 .board {
     display: grid;
@@ -54,14 +48,8 @@ h1 {
     font-weight: bold;
 }
 
-.newGame:hover, 
-.newGame:active{
-    background-color: #06102d;
-    width: 10.1em;
-    height: 3.1em;
-}
-
 .gameOverMsg {
+    height: 2em;
     align-self: center;
     font-size: 1.6em;
     font-weight: bold;
