@@ -14,6 +14,7 @@ h1 {
   font-size: 2.5em;
   align-self: center;
   color: white;
+  text-align: center;
 }
 
 
@@ -36,6 +37,7 @@ h1 {
 .buttonContainer {
     margin-top: 2em;
     align-self: center;
+    text-align: center;
 }
 
 
@@ -55,4 +57,5 @@ h1 {
     font-size: 1.6em;
     font-weight: bold;
     color: white;
+    text-align: center;
 }
