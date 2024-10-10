@@ -119,6 +119,7 @@ function GameController(playerOneName="PlayerOne",
                 tokenPlaced = board.placeToken(cellRow, cellCol, playerTwo.token);
             } while(tokenPlaced === false);
 
+            isGameOver = checkWinner();
             if (isGameOver === 0 || isGameOver === 1 || isGameOver === 2) {
                 return isGameOver;
             } else {
@@ -136,14 +137,15 @@ function GameController(playerOneName="PlayerOne",
 }
 
 function ScreenController() {
-    const game = GameController();
+    const newGame = document.querySelector(".newGame");
     const boardDiv = document.querySelector(".board");
-    const endMsg = document.querySelector(".msg");
+    const endMsg = document.querySelector(".gameOverMsg");
+    const game = GameController();
     const board = game.getBoard;
+    let isGameOver = -1;
 
     const updateScreen = () => {
         boardDiv.textContent = "";
-        console.log(board);
         board.forEach((row, rowIndex) => {
             row.forEach((value, columnIndex) => {
                 const cellButton = document.createElement("button");
@@ -159,25 +161,38 @@ function ScreenController() {
     }
 
     boardDiv.addEventListener("click", (event) => {
+
+        if (isGameOver !== -1) {
+            return;
+        }
         const selectedRow = parseInt(event.target.dataset.row, 10);
         const selectedColumn = parseInt(event.target.dataset.column, 10);
 
-
-        //if (!selectedRow && !selectedRow) return;
-        const isGameOver = game.playRound(selectedRow, selectedColumn);
+        isGameOver = game.playRound(selectedRow, selectedColumn);
         updateScreen();
-        if (isGameOver === 1) {
-            endMsg.textContent = "You Win!";
-            return;
+
+        if (isGameOver !== -1) {
+            if (isGameOver === 1) {
+                endMsg.textContent = "You Win!";
+            }
+            else if (isGameOver === 2) {
+                endMsg.textContent = "You Lose!";
+            }
+            else if (isGameOver === 0) {
+                endMsg.textContent = "Tie!";
+            }
         }
-        else if (isGameOver === 2) {
-            endMsg.textContent = "You Lose!";
-            return;
+    });
+
+    newGame.addEventListener("click", (event) => {
+        endMsg.textContent = "";
+        isGameOver = -1;
+        for (let row of board) {
+            for (let i = 0; i < 3; i++) {
+                row[i] = "";
+            }
         }
-        else if (isGameOver === 0) {
-            endMsg.textContent = "Tie!";
-            return;
-        }
+        updateScreen();
     });
     updateScreen();
 }
